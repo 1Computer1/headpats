@@ -1,0 +1,33 @@
+{
+    "name": "headpats",
+    "version": "0.1.0",
+    "description": "Pattern matching without extra syntax.",
+    "main": "./src/index.js",
+    "author": "1Computer",
+    "license": "MIT",
+    "keywords": [
+        "pattern",
+        "matching"
+    ],
+    "dependencies": {},
+    "devDependencies": {
+        "eslint": "^5.4.0",
+        "istanbul": "^0.4.5"
+    },
+    "scripts": {
+        "test": "npm run lint && npm run tests",
+        "lint": "eslint ./src ./test",
+        "tests": "node test"
+    },
+    "engines": {
+        "node": ">=8.0.0"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/1Computer1/headpats.git"
+    },
+    "bugs": {
+        "url": "https://github.com/1Computer1/headpats/issues"
+    },
+    "homepage": "https://github.com/1Computer1/headpats"
+}
