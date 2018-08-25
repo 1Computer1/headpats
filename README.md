@@ -19,8 +19,12 @@ function doOperation(operation, a, b) {
 
 ```js
 const o = { x: { y: { z: 10 } } };
-pat.match({ x: { y: { z: $('z') } } }, o) // → { z: 10 }
-pat.match({ x: { y: { what: $('what') } } }, o) // → null
+
+pat.match({ x: { y: { z: $('z') } } }, o)
+→ { z: 10 }
+
+pat.match({ x: { y: { what: $('what') } } }, o)
+→ null
 ```
 
 **Recusive Map**
@@ -30,7 +34,8 @@ const map = pat
     .clause([[], _], () => [])
     .clause([is.array([$('x')], $('xs')), $('f')], ({ x, xs, f }) => [f(x)].concat(map(xs, f)));
 
-map([1, 2, 3, 4], x => x * 2) // → [2, 4, 6, 8]
+map([1, 2, 3, 4], x => x * 2)
+→ [2, 4, 6, 8]
 ```
 
 **Option**
@@ -48,8 +53,11 @@ const double = pat
     .case($$(Some, { x: $('x') }), ({ x }) => new Some(x * 2))
     .case(_, () => new None());
 
-double(new Some(5)) // → Some { x: 10 }
-double(new None()) // → None {}
+double(new Some(5))
+→ Some { x: 10 }
+
+double(new None())
+→ None {}
 ```
 
 ## Documentation
