@@ -1,4 +1,5 @@
 const extractor = require('../util/extractor');
+const isPrimitive = require('../util/isPrimitive');
 
 class Pattern {
     [extractor]() {
@@ -21,7 +22,7 @@ class Pattern {
         const ObjectPattern = require('./ObjectPattern');
 
         if (pattern == null || pattern[extractor] == null) {
-            if (pattern == null || typeof pattern != 'object') {
+            if (isPrimitive(pattern)) {
                 return new EqualPattern(pattern);
             }
 

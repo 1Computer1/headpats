@@ -1,5 +1,6 @@
 const extractor = require('../util/extractor');
 const ignored = require('../util/ignored');
+const isPrimitive = require('../util/isPrimitive');
 const Immutable = require('../util/Immutable');
 const Pattern = require('./Pattern');
 
@@ -13,7 +14,7 @@ class ObjectPattern extends Pattern {
     }
 
     [extractor](value, previousExtracted) {
-        if (value == null || typeof value !== 'object') {
+        if (isPrimitive(value)) {
             return { matched: false };
         }
 
