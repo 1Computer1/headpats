@@ -4,8 +4,6 @@ const ignored = require('./util/ignored');
 const Pattern = require('./patterns/Pattern');
 const patterns = require('./patterns');
 
-const fun = Class => (...args) => new Class(...args);
-
 module.exports = {
     // Symbols
     extractor,
@@ -18,20 +16,20 @@ module.exports = {
 
     // Matcher aliases
     is: {
-        id: fun(patterns.IDPattern),
-        ignore: fun(patterns.IgnorePattern),
-        equal: fun(patterns.EqualPattern),
-        oneOf: fun(patterns.MultiplePattern),
-        inRange: fun(patterns.RangePattern),
-        type: fun(patterns.TypePattern),
-        instance: fun(patterns.InstancePattern),
-        preguarded: fun(patterns.PreguardedPattern),
-        guarded: fun(patterns.GuardedPattern),
-        array: fun(patterns.ArrayPattern),
-        object: fun(patterns.ObjectPattern),
-        map: fun(patterns.MapPattern),
-        view: fun(patterns.ViewPattern),
-        bind: fun(patterns.BindPattern)
+        id: id => new patterns.IDPattern(id),
+        ignore: () => new patterns.IgnorePattern(),
+        equal: value => new patterns.EqualPattern(value),
+        oneOf: (...values) => new patterns.MultiplePattern(...values),
+        inRange: (lowerBound, upperBound, exclusive = true) => new patterns.RangePattern(lowerBound, upperBound, exclusive),
+        type: (type, pattern) => new patterns.TypePattern(type, pattern),
+        instance: (Class, pattern) => new patterns.InstancePattern(Class, pattern),
+        preguarded: (predicate, pattern) => new patterns.PreguardedPattern(predicate, pattern),
+        guarded: (pattern, predicate) => new patterns.GuardedPattern(pattern, predicate),
+        array: (...args) => new patterns.ArrayPattern(...args),
+        object: (...args) => new patterns.ObjectPattern(...args),
+        map: (...args) => new patterns.MapPattern(...args),
+        view: (fn, pattern) => new patterns.ViewPattern(fn, pattern),
+        bind: (pattern, id) => new patterns.BindPattern(pattern, id)
     },
 
     // Matcher shortcuts
