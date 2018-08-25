@@ -1,7 +1,7 @@
 const extractor = require('../util/extractor');
 const Pattern = require('./Pattern');
 
-class ActivePattern extends Pattern {
+class ViewPattern extends Pattern {
     constructor(fn, pattern) {
         super();
 
@@ -14,4 +14,4 @@ class ActivePattern extends Pattern {
     }
 }
 
-module.exports = ActivePattern;
+module.exports = ViewPattern;

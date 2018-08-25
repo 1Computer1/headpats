@@ -30,7 +30,7 @@ module.exports = {
         array: fun(patterns.ArrayPattern),
         object: fun(patterns.ObjectPattern),
         map: fun(patterns.MapPattern),
-        active: fun(patterns.ActivePattern),
+        view: fun(patterns.ViewPattern),
         bind: fun(patterns.BindPattern)
     },
     $: id => new patterns.IDPattern(id),

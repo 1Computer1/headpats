@@ -11,6 +11,6 @@ module.exports = {
     ArrayPattern: require('./ArrayPattern'),
     ObjectPattern: require('./ObjectPattern'),
     MapPattern: require('./MapPattern'),
-    ActivePattern: require('./ActivePattern'),
+    ViewPattern: require('./ViewPattern'),
     BindPattern: require('./BindPattern')
 };

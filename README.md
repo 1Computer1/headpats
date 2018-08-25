@@ -225,10 +225,10 @@ It creates a pattern that matches if:
 
 The `previousExtracted` object is updated after every pattern match in `patterns`.  
 
-**Active**
+**View**
 
-- `new ActivePattern(fn, pattern)`
-- `is.active(fn, pattern)`
+- `new ViewPattern(fn, pattern)`
+- `is.view(fn, pattern)`
 
 Creates a pattern that matches if `fn` of the given value matches the `pattern`.  
 This is used to map a value into another for another pattern.  

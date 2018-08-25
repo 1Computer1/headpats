@@ -95,7 +95,7 @@ should('match based on a preguard', () => {
 });
 
 should('match based on a mapped value', () => {
-    const fn = pat.case(is.active(a => a[0], 1), () => 1);
+    const fn = pat.case(is.view(a => a[0], 1), () => 1);
     assert.strictEqual(fn([1]), 1);
 });
 
