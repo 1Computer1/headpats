@@ -258,7 +258,7 @@ The `predicate` will take the `extracted` object and will return a boolean for w
 The `callback` will take the `extracted` object and can return anything.  
 
 Once all cases are added, the `cases()` object itself can be called with a value to match.  
-It will match the given value through all the cases until one is found an runs its `callback`.  
+It will match the given value through all the cases until one is found and runs its `callback`.  
 If no case matches, an error is thrown.   
 
 The shortcut functions `case` and `caseGuarded` on the library index is a shortcut to `cases().case` and `cases().caseGuarded`.  
@@ -280,7 +280,7 @@ The `predicate` will take the `extracted` object and will return a boolean for w
 The `callback` will take the `extracted` object and can return anything.  
 
 Once all clauses are added, the `clauses()` object itself can be called with a parameter list.  
-It will match the arguments through all the clauses until one is found an runs its `callback`.  
+It will match the arguments through all the clauses until one is found and runs its `callback`.  
 If no clause matches, an error is thrown.   
 
 The shortcut functions `clause` and `clauseGuarded` on the library index is a shortcut to `clauses().clause` and `clauses().clauseGuarded`.  
