@@ -20,10 +20,10 @@ function doOperation(operation, a, b) {
 ```js
 const o = { x: { y: { z: 10 } } };
 
-pat.match({ x: { y: { z: $('z') } } }, o)
+pat.match({ x: { y: { z: $.z } } }, o)
 → { z: 10 }
 
-pat.match({ x: { y: { what: $('what') } } }, o)
+pat.match({ x: { y: { what: $.what } } }, o)
 → null
 ```
 
@@ -32,7 +32,7 @@ pat.match({ x: { y: { what: $('what') } } }, o)
 ```js
 const map = pat
     .clause([[], _], () => [])
-    .clause([is.array([$('x')], $('xs')), $('f')], ({ x, xs, f }) => [f(x)].concat(map(xs, f)));
+    .clause([is.array([$.x], $.xs), $.f], ({ x, xs, f }) => [f(x)].concat(map(xs, f)));
 
 map([1, 2, 3, 4], x => x * 2)
 → [2, 4, 6, 8]
@@ -50,7 +50,7 @@ class Some extends Option {
 }
 
 const double = pat
-    .case($$(Some, { x: $('x') }), ({ x }) => new Some(x * 2))
+    .case($$(Some, { x: $.x }), ({ x }) => new Some(x * 2))
     .case(_, () => new None());
 
 double(new Some(5))

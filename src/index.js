@@ -35,7 +35,15 @@ module.exports = {
     },
 
     // Matcher shortcuts
-    $: id => new patterns.IDPattern(id),
+    $: new Proxy(id => new patterns.IDPattern(id), {
+        get(self, property) {
+            if (['toString', 'valueOf', 'inspect', 'constructor', Symbol.toPrimitive, Symbol.for('util.inspect.custom')].includes(property)) {
+                return self[property];
+            }
+
+            return self(property);
+        }
+    }),
     $$: (Class, pattern) => new patterns.InstancePattern(Class, pattern),
     _: new patterns.IgnorePattern(),
 
