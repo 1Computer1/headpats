@@ -196,6 +196,16 @@ should('match a Map with rest entries', () => {
     assert.deepStrictEqual(fn(new Map([['x', 5], ['y', 7]])), new Map([['y', 7]]));
 });
 
+should('match the start of a string', () => {
+    const fn = pat.case(is.string('hello ', $.rest), ({ rest }) => rest);
+    assert.deepStrictEqual(fn('hello world'), 'world');
+});
+
+should('not match the start of a string', () => {
+    const fn = pat.case(is.string('hello ', $.rest), ({ rest }) => rest);
+    assert.throws(() => fn('this is hello world'), /^TypeError: No case matched the given value$/);
+});
+
 should('test for a match using a helper function', () => {
     assert.strictEqual(pat.test(1, 1), true);
     assert.strictEqual(pat.test(1, 2), false);

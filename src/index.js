@@ -28,6 +28,7 @@ module.exports = {
         array: (...args) => new patterns.ArrayPattern(...args),
         object: (...args) => new patterns.ObjectPattern(...args),
         map: (...args) => new patterns.MapPattern(...args),
+        string: (string, restPattern) => new patterns.StringPattern(string, restPattern),
         view: (fn, pattern) => new patterns.ViewPattern(fn, pattern),
         bind: (pattern, id) => new patterns.BindPattern(pattern, id)
     },
