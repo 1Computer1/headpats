@@ -83,7 +83,11 @@ class NotEqualAndBindPattern extends Pattern {
         this.id = id;
     }
 
-    [extractor](value) {
+    [extractor](value, previousExtracted) {
+        if (this.id in previousExtracted && value !== previousExtracted[this.id]) {
+            return { matched: false };
+        }
+
         return value !== this.value
             ? { matched: true, extracted: { [this.id]: value } }
             : { matched: false };
@@ -92,8 +96,9 @@ class NotEqualAndBindPattern extends Pattern {
 
 // This object implements the protocol.
 const pattern = new NotEqualAndBindPattern(10, 'x');
-pattern[extractor](11) // → { matched: true, extracted: { x: 11 } }
-pattern[extractor](10) // → { matched: false }
+pattern[extractor](10, {}) // → { matched: false }
+pattern[extractor](11, {}) // → { matched: true, extracted: { x: 11 } }
+pattern[extractor](11, { x: 5 }) // → { matched: false }
 ```
 
 The built-in patterns below all implement this protocol and can be used in the built-in functions below.  
