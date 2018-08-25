@@ -45,7 +45,7 @@ class Some extends Option {
 }
 
 const double = pat
-    .case(is.instance(Some, { x: $('x') }), ({ x }) => new Some(x * 2))
+    .case($$(Some, { x: $('x') }), ({ x }) => new Some(x * 2))
     .case(_, () => new None());
 
 double(new Some(5)) // → Some { x: 10 }
@@ -160,6 +160,7 @@ The `extracted` object that `pattern` extracts is used.
 
 - `new InstancePattern(Class, pattern)`
 - `is.instance(Class, pattern)`
+- `$$(Class, pattern)`
 
 Creates a pattern that matches if the given value is an `instanceof Class` and that `pattern` also matches.  
 The `extracted` object that `pattern` extracts is used.  

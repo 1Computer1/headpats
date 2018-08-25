@@ -11,7 +11,7 @@ const should = (desc, fn) => {
 };
 
 const pat = require('../');
-const { is, $, _ } = pat;
+const { is, $, $$, _ } = pat;
 
 should('match any value', () => {
     const fn = pat.case($('x'), ({ x }) => x + 1);
@@ -46,8 +46,8 @@ should('match type with a class', () => {
     class Y {}
 
     const fn = pat
-        .case(is.instance(X, $('x')), ({ x }) => x instanceof X)
-        .case(is.instance(Y, $('y')), ({ y }) => y instanceof Y);
+        .case($$(X, $('x')), ({ x }) => x instanceof X)
+        .case($$(Y, $('y')), ({ y }) => y instanceof Y);
 
     assert.deepStrictEqual(fn(new X()), true);
     assert.deepStrictEqual(fn(new Y()), true);

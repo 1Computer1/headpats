@@ -16,7 +16,7 @@ module.exports = {
     patterns,
     functions,
 
-    // Matcher shortcuts
+    // Matcher aliases
     is: {
         id: fun(patterns.IDPattern),
         ignore: fun(patterns.IgnorePattern),
@@ -33,7 +33,10 @@ module.exports = {
         view: fun(patterns.ViewPattern),
         bind: fun(patterns.BindPattern)
     },
+
+    // Matcher shortcuts
     $: id => new patterns.IDPattern(id),
+    $$: (Class, pattern) => new patterns.InstancePattern(Class, pattern),
     _: new patterns.IgnorePattern(),
 
     // Shortcut functions
