@@ -17,7 +17,7 @@
     "scripts": {
         "test": "npm run lint && npm run tests",
         "lint": "eslint ./src ./test",
-        "tests": "node test"
+        "tests": "istanbul cover test"
     },
     "engines": {
         "node": ">=8.0.0"
