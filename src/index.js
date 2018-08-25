@@ -1,7 +1,6 @@
 const extractor = require('./util/extractor');
 const functions = require('./functions');
 const ignored = require('./util/ignored');
-const Pattern = require('./patterns/Pattern');
 const patterns = require('./patterns');
 
 module.exports = {
@@ -10,7 +9,6 @@ module.exports = {
     ignored,
 
     // Usable things
-    Pattern,
     patterns,
     functions,
 

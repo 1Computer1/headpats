@@ -1,4 +1,5 @@
 module.exports = {
+    Pattern: require('./Pattern'),
     IDPattern: require('./IDPattern'),
     IgnorePattern: require('./IgnorePattern'),
     EqualPattern: require('./EqualPattern'),
