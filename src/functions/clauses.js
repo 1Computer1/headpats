@@ -9,17 +9,19 @@ const clauses = () => {
         clause(...args) {
             if (args.length === 2) {
                 this.clauses.push([new ArrayPattern(args[0]), args[1]]);
+            } else {
+                this.clauses.push([new ArrayPattern(args[0], args[1]), args[2]]);
             }
 
-            this.clauses.push([new ArrayPattern(args[0], args[1]), args[2]]);
             return this;
         },
         clauseGuarded(...args) {
             if (args.length === 3) {
                 this.clauses.push([new GuardedPattern(new ArrayPattern(args[0]), args[1]), args[2]]);
+            } else {
+                this.clauses.push([new GuardedPattern(new ArrayPattern(args[0], args[1]), args[2]), args[3]]);
             }
 
-            this.clauses.push([new GuardedPattern(new ArrayPattern(args[0], args[1]), args[2]), args[3]]);
             return this;
         }
     };
