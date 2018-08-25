@@ -3,7 +3,7 @@ const extractor = require('../util/extractor');
 const GuardedPattern = require('../patterns/GuardedPattern');
 const Pattern = require('../patterns/Pattern');
 
-const clausesConstruct = () => {
+const clauses = () => {
     const context = {
         clauses: [],
         clause(...args) {
@@ -36,4 +36,4 @@ const clausesConstruct = () => {
     }, context);
 };
 
-module.exports = clausesConstruct;
+module.exports = clauses;

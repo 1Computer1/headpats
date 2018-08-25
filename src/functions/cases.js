@@ -2,7 +2,7 @@ const extractor = require('../util/extractor');
 const GuardedPattern = require('../patterns/GuardedPattern');
 const Pattern = require('../patterns/Pattern');
 
-const casesConstruct = () => {
+const cases = () => {
     const context = {
         cases: [],
         case(pattern, cb) {
@@ -27,4 +27,4 @@ const casesConstruct = () => {
     }, context);
 };
 
-module.exports = casesConstruct;
+module.exports = cases;
