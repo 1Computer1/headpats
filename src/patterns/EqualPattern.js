@@ -4,6 +4,7 @@ const Pattern = require('./Pattern');
 class EqualPattern extends Pattern {
     constructor(value) {
         super();
+
         this.value = value;
     }
 

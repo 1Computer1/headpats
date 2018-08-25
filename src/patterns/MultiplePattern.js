@@ -4,6 +4,7 @@ const Pattern = require('./Pattern');
 class MultiplePattern extends Pattern {
     constructor(...values) {
         super();
+
         this.values = values;
     }
 

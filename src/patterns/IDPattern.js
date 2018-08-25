@@ -4,6 +4,7 @@ const Pattern = require('./Pattern');
 class IDPattern extends Pattern {
     constructor(id) {
         super();
+
         this.id = id;
     }
 
