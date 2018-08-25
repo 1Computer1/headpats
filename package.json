@@ -3,6 +3,7 @@
     "version": "0.1.0",
     "description": "Pattern matching without extra syntax.",
     "main": "./src/index.js",
+    "types": "./typings/index.d.ts",
     "author": "1Computer",
     "license": "MIT",
     "keywords": [
@@ -11,12 +12,16 @@
     ],
     "dependencies": {},
     "devDependencies": {
+        "@types/node": "^10.9.2",
         "eslint": "^5.4.0",
-        "istanbul": "^0.4.5"
+        "istanbul": "^0.4.5",
+        "tslint": "^5.11.0",
+        "tslint-config-typings": "^0.3.1",
+        "typescript": "^3.0.1"
     },
     "scripts": {
         "test": "npm run lint && npm run tests",
-        "lint": "eslint ./src ./test",
+        "lint": "eslint ./src ./test && tslint typings/index.d.ts",
         "tests": "istanbul cover test"
     },
     "engines": {

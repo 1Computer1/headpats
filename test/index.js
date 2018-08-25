@@ -239,7 +239,7 @@ should('create a function with guarded clauses', () => {
 });
 
 should('use a custom matcher', () => {
-    class MyPattern extends pat.Pattern {
+    class MyPattern extends pat.patterns.Pattern {
         [pat.extractor](value) {
             return value === 1
                 ? { matched: true, extracted: { x: value } }
