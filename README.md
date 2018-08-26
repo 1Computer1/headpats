@@ -4,6 +4,13 @@ Pattern matching in JavaScript without new syntax.
 
 ## Examples
 
+**Setup**  
+
+```js
+const pat = require('headpats');
+const { $, $$, _, is, rest } = pat;
+```
+
 **Stringly Typed Function**
 
 ```js
