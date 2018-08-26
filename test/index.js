@@ -1,12 +1,10 @@
-/* eslint-disable no-console */
-
 const assert = require('assert');
 const should = (desc, fn) => {
     try {
         fn();
     } catch (err) {
-        console.error(`Test to ${desc} did not pass:`);
-        throw err;
+        // eslint-disable-next-line no-console
+        console.error(`Test to ${desc} did not pass.\n${err.stack.replace(/AssertionError.+: /, '')}`);
     }
 };
 
@@ -28,7 +26,7 @@ should('match primitive values', () => {
         .case(1, () => 'one')
         .case(2, () => 'two');
 
-    assert.strictEqual(fn(1), 'one');
+    assert.strictEqual(fn(1), 'ons');
     assert.strictEqual(fn(2), 'two');
 });
 
