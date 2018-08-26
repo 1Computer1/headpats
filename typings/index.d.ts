@@ -24,6 +24,7 @@ export interface PatternMatchResult {
 }
 
 export interface PatternMatcher {
+    [ignored]?: boolean;
     [extractor](value: any, previousExtracted: object): PatternMatchResult;
 }
 
@@ -109,6 +110,8 @@ declare namespace Patterns {
 
     export class IgnorePattern extends Pattern {
         public constructor();
+
+        public [ignored]: true;
 
         public [extractor](value: any, previousExtracted: object): PatternMatchResult;
     }
