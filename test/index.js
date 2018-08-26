@@ -11,7 +11,7 @@ const should = (desc, fn) => {
 };
 
 const pat = require('../');
-const { is, $, $$, _ } = pat;
+const { is, $, $$, _, rest } = pat;
 
 should('match any value', () => {
     const fn = pat.case($.x, ({ x }) => x + 1);
@@ -123,12 +123,12 @@ should('match an array of a given length', () => {
 });
 
 should('match the rest of an array', () => {
-    const fn = pat.case(is.array([_], $.rest), ({ rest }) => rest);
+    const fn = pat.case([_, [rest, $.xs]], ({ xs }) => xs);
     assert.deepStrictEqual(fn([1, 2, 3]), [2, 3]);
 });
 
 should('throw an error when empty array does not match against array rest pattern with one element', () => {
-    const fn = pat.case(is.array([_], $.rest), ({ rest }) => rest);
+    const fn = pat.case([_, [rest, $.xs]], ({ xs }) => xs);
     assert.throws(() => fn([]), /^TypeError: No case matched the given value$/);
 });
 
@@ -182,7 +182,7 @@ should('match an object with symbol property', () => {
 });
 
 should('match an object with rest properties', () => {
-    const fn = pat.case(is.object({ x: 1 }, $.rest), ({ rest }) => rest);
+    const fn = pat.case({ x: 1, [rest]: $.xs }, ({ xs }) => xs);
     assert.deepStrictEqual(fn({ x: 1, y: 2, z: 3 }), { y: 2, z: 3 });
 });
 
@@ -192,17 +192,17 @@ should('match a Map', () => {
 });
 
 should('match a Map with rest entries', () => {
-    const fn = pat.case(is.map(new Map([['x', _]]), $.rest), ({ rest }) => rest);
+    const fn = pat.case(new Map([['x', _], [rest, $.xs]]), ({ xs }) => xs);
     assert.deepStrictEqual(fn(new Map([['x', 5], ['y', 7]])), new Map([['y', 7]]));
 });
 
 should('match the start of a string', () => {
-    const fn = pat.case(is.string('hello ', $.rest), ({ rest }) => rest);
+    const fn = pat.case(is.string('hello ', $.suffix), ({ suffix }) => suffix);
     assert.deepStrictEqual(fn('hello world'), 'world');
 });
 
 should('not match the start of a string', () => {
-    const fn = pat.case(is.string('hello ', $.rest), ({ rest }) => rest);
+    const fn = pat.case(is.string('hello ', $.suffix), ({ suffix }) => suffix);
     assert.throws(() => fn('this is hello world'), /^TypeError: No case matched the given value$/);
 });
 
@@ -258,7 +258,7 @@ should('use a custom matcher', () => {
 should('do a map over an array', () => {
     const map = pat
         .clause([[], _], () => [])
-        .clause([is.array([$.x], $.xs), $.f], ({ x, xs, f }) => [f(x)].concat(map(xs, f)));
+        .clause([[$.x, [rest, $.xs]], $.f], ({ x, xs, f }) => [f(x)].concat(map(xs, f)));
 
     assert.deepStrictEqual(map([1, 2, 3, 4], x => x * 2), [2, 4, 6, 8]);
 });
@@ -273,9 +273,10 @@ should('match a complicated thing', () => {
             ]),
             object: {
                 object2: {
-                    object3: is.object({
-                        z: is.bind(is.inRange(1, 100), 'z')
-                    }, $.rest)
+                    object3: {
+                        z: is.bind(is.inRange(1, 100), 'z'),
+                        [rest]: $.xs
+                    }
                 }
             }
         }, o => o);
@@ -297,6 +298,6 @@ should('match a complicated thing', () => {
     }), {
         array: [1, 2, 3],
         z: 10,
-        rest: { zz: 15 }
+        xs: { zz: 15 }
     });
 });

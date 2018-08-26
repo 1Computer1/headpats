@@ -2,11 +2,13 @@ const extractor = require('./util/extractor');
 const functions = require('./functions');
 const ignored = require('./util/ignored');
 const patterns = require('./patterns');
+const rest = require('./util/rest');
 
 module.exports = {
     // Symbols
     extractor,
     ignored,
+    rest,
 
     // Usable things
     patterns,

@@ -43,6 +43,7 @@ export type Clauses = ((value: any) => any) & {
 
 export const extractor: unique symbol;
 export const ignored: unique symbol;
+export const rest: unique symbol;
 
 declare namespace Functions {
     export function cases(): Cases;

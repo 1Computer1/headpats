@@ -32,7 +32,7 @@ pat.match({ x: { y: { what: $.what } } }, o)
 ```js
 const map = pat
     .clause([[], _], () => [])
-    .clause([is.array([$.x], $.xs), $.f], ({ x, xs, f }) => [f(x)].concat(map(xs, f)));
+    .clause([[$.x, [rest, $.xs]], $.f], ({ x, xs, f }) => [f(x)].concat(map(xs, f)));
 
 map([1, 2, 3, 4], x => x * 2)
 → [2, 4, 6, 8]
