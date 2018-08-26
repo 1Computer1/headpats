@@ -13,6 +13,18 @@
             "spaces",
             4
         ],
+        "member-ordering": [
+            true,
+            {
+                "order": [
+                    "constructor",
+                    "instance-field",
+                    "instance-method",
+                    "static-field",
+                    "static-method"
+                ]
+            }
+        ],
         "no-duplicate-variable": true,
         "no-unused-variable": [false],
         "no-eval": true,
