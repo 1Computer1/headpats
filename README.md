@@ -11,7 +11,7 @@ const pat = require('headpats');
 const { $, $$, _, is, rest } = pat;
 ```
 
-**Stringly Typed Function**  
+**Stringly Typed**  
 
 ```js
 function doOperation(operation, a, b) {
@@ -20,6 +20,15 @@ function doOperation(operation, a, b) {
         .case('minus', () => a - b)
         .case(_, () => NaN)(operation);
 }
+
+doOperation('add', 1, 2)
+→ 3
+
+doOperation('minus', 1, 2)
+→ -1
+
+doOperation('something', 1, 2)
+→ NaN
 ```
 
 **Safe Traversal**  
@@ -34,18 +43,25 @@ pat.match({ x: { y: { what: $.what } } }, o)
 → null
 ```
 
-**Recursive Map**  
+**Result Matching**  
 
 ```js
-const map = pat
-    .clause([], _, () => [])
-    .clause([$.x, [rest, $.xs]], $.f, ({ x, xs, f }) => [f(x)].concat(map(xs, f)));
+const ok = Symbol('ok');
+const err = Symbol('err');
 
-map([1, 2, 3, 4], x => x * 2)
-→ [2, 4, 6, 8]
+function divide(a, b) {
+    if (b === 0) {
+        return [err, null];
+    }
+
+    return [ok, a / b];
+}
+
+pat.match([ok, $.num], divide(10, 2));
+→ { num: 5 }
 ```
 
-**Option**  
+**Option Enum**  
 
 ```js
 class Option {}
@@ -58,13 +74,27 @@ class Some extends Option {
 
 const double = pat
     .case($$(Some, { x: $.x }), ({ x }) => new Some(x * 2))
-    .case(_, () => new None());
+    .case($$(None, _), () => new None());
 
 double(new Some(5))
 → Some { x: 10 }
 
 double(new None())
 → None {}
+
+double(100)
+→ Error
+```
+
+**Recursive Map**  
+
+```js
+const map = pat
+    .clause([], _, () => [])
+    .clause([$.x, [rest, $.xs]], $.f, ({ x, xs, f }) => [f(x)].concat(map(xs, f)));
+
+map([1, 2, 3, 4], x => x * 2)
+→ [2, 4, 6, 8]
 ```
 
 ## Documentation
