@@ -4,7 +4,8 @@ const should = (desc, fn) => {
         fn();
     } catch (err) {
         // eslint-disable-next-line no-console
-        console.error(`Test to ${desc} did not pass.\n${err.stack.replace(/AssertionError.+: /, '')}`);
+        err.message = `Test to ${desc} did not pass.\n${err.message}`;
+        throw err;
     }
 };
 
