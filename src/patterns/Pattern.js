@@ -31,9 +31,11 @@ class Pattern {
             }
 
             if (Array.isArray(pattern)) {
-                const restItemIndex = pattern.findIndex(v => Array.isArray(v) && v.length === 2 && v[0] === rest);
-                if (restItemIndex !== -1) {
-                    return new ArrayPattern(ImmutableArray.remove(pattern, restItemIndex), pattern[restItemIndex][1]);
+                const hasRest = Array.isArray(pattern[pattern.length - 1])
+                    && pattern[pattern.length - 1].length === 2
+                    && pattern[pattern.length - 1][0] === rest;
+                if (hasRest) {
+                    return new ArrayPattern(ImmutableArray.remove(pattern, -1), pattern[pattern.length - 1][1]);
                 }
 
                 return new ArrayPattern(pattern);
