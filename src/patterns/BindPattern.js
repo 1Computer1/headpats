@@ -6,7 +6,7 @@ class BindPattern extends Pattern {
     constructor(pattern, id) {
         super();
 
-        this.pattern = pattern;
+        this.pattern = Pattern.patternOf(pattern);
         this.id = id;
     }
 
@@ -15,7 +15,7 @@ class BindPattern extends Pattern {
             return { matched: false };
         }
 
-        const { matched, extracted } = Pattern.patternOf(this.pattern)[extractor](value, previousExtracted);
+        const { matched, extracted } = this.pattern[extractor](value, previousExtracted);
         if (!matched) {
             return { matched: false };
         }

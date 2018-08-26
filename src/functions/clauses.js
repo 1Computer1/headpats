@@ -1,7 +1,6 @@
 const ArrayPattern = require('../patterns/ArrayPattern');
 const extractor = require('../util/extractor');
 const GuardedPattern = require('../patterns/GuardedPattern');
-const Pattern = require('../patterns/Pattern');
 
 const clauses = () => {
     const context = {
@@ -28,7 +27,7 @@ const clauses = () => {
 
     return Object.assign((...args) => {
         for (const [pattern, cb] of context.clauses) {
-            const { matched, extracted } = Pattern.patternOf(pattern)[extractor](args, {});
+            const { matched, extracted } = pattern[extractor](args, {});
             if (matched) {
                 return cb(extracted);
             }

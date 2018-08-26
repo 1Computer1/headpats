@@ -6,12 +6,12 @@ class InstancePattern extends Pattern {
         super();
 
         this.Class = Class;
-        this.pattern = pattern;
+        this.pattern = Pattern.patternOf(pattern);
     }
 
     [extractor](value, previousExtracted) {
         if (value instanceof this.Class) {
-            return Pattern.patternOf(this.pattern)[extractor](value, previousExtracted);
+            return this.pattern[extractor](value, previousExtracted);
         }
 
         return { matched: false };

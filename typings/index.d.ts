@@ -10,12 +10,12 @@ interface HasInstance {
 
 export type PatternOf<T> = T extends PatternMatcher
     ? PatternMatcher
-    : T extends (infer U)[]
-        ? Patterns.ArrayPattern<U>
-        : T extends Map<infer K, infer V>
-            ? Patterns.MapPattern<K, V>
+    : T extends any[]
+        ? Patterns.ArrayPattern
+        : T extends Map<infer K, any>
+            ? Patterns.MapPattern<K>
             : T extends Object
-                ? Patterns.ObjectPattern<T>
+                ? Patterns.ObjectPattern
                 : Patterns.EqualPattern<T>;
 
 export interface PatternMatchResult {
@@ -63,12 +63,12 @@ declare namespace Patterns {
         public static patternOf<T>(pattern: T): PatternOf<T>;
     }
 
-    export class ArrayPattern<T> extends Pattern {
-        public constructor(patterns: Array<T>, restPattern?: any);
+    export class ArrayPattern extends Pattern {
+        public constructor(patterns: Array<any>, restPattern?: any);
 
-        public patterns: Array<T>;
+        public patterns: Array<PatternMatcher>;
         public rest: boolean;
-        public restPattern?: any;
+        public restPattern?: PatternMatcher;
 
         public [extractor](value: any, previousExtracted: object): PatternMatchResult;
     }
@@ -77,7 +77,7 @@ declare namespace Patterns {
         public constructor(pattern: any, id: PropertyKey);
 
         public id: PropertyKey;
-        public pattern: any;
+        public pattern: PatternMatcher;
 
         public [extractor](value: any, previousExtracted: object): PatternMatchResult;
     }
@@ -93,7 +93,7 @@ declare namespace Patterns {
     export class GuardedPattern extends Pattern {
         public constructor(pattern: any, predicate: Predicate<object>);
 
-        public pattern: any;
+        public pattern: PatternMatcher;
         public predicate: Predicate<object>;
 
         public [extractor](value: any, previousExtracted: object): PatternMatchResult;
@@ -117,17 +117,17 @@ declare namespace Patterns {
         public constructor(Class: T, pattern: any);
 
         public Class: T;
-        public pattern: any;
+        public pattern: PatternMatcher;
 
         public [extractor](value: any, previousExtracted: object): PatternMatchResult;
     }
 
-    export class MapPattern<K, V> extends Pattern {
-        public constructor(patterns: Map<K, V>, restPattern?: any);
+    export class MapPattern<K> extends Pattern {
+        public constructor(patterns: Map<K, any>, restPattern?: any);
 
-        public patterns: Map<K, V>;
+        public patterns: Map<K, PatternMatcher>;
         public rest: boolean;
-        public restPattern?: any;
+        public restPattern?: PatternMatcher;
 
         public [extractor](value: any, previousExtracted: object): PatternMatchResult;
     }
@@ -140,12 +140,12 @@ declare namespace Patterns {
         public [extractor](value: any, previousExtracted: object): PatternMatchResult;
     }
 
-    export class ObjectPattern<T extends Object> extends Pattern {
-        public constructor(patterns: T, restPattern?: any);
+    export class ObjectPattern extends Pattern {
+        public constructor(patterns: any, restPattern?: any);
 
-        public patterns: T;
+        public patterns: { [key: string]: PatternMatcher };
         public rest: boolean;
-        public restPattern?: any;
+        public restPattern?: PatternMatcher;
 
         public [extractor](value: any, previousExtracted: object): PatternMatchResult;
     }
@@ -153,7 +153,7 @@ declare namespace Patterns {
     export class PreguardedPattern extends Pattern {
         public constructor(predicate: Predicate<any>, pattern: any);
 
-        public pattern: any;
+        public pattern: PatternMatcher;
         public predicate: Predicate<any>;
 
         public [extractor](value: any, previousExtracted: object): PatternMatchResult;
@@ -172,7 +172,7 @@ declare namespace Patterns {
     export class StringPattern extends Pattern {
         public constructor(string: string, restPattern: any);
 
-        public restPattern: any;
+        public restPattern: PatternMatcher;
         public string: string;
 
         public [extractor](value: any, previousExtracted: object): PatternMatchResult;
@@ -181,7 +181,7 @@ declare namespace Patterns {
     export class TypePattern<T extends JavaScriptType> extends Pattern {
         public constructor(type: T, pattern: any);
 
-        public pattern: any;
+        public pattern: PatternMatcher;
         public type: T;
 
         public [extractor](value: any, previousExtracted: object): PatternMatchResult;
@@ -191,7 +191,7 @@ declare namespace Patterns {
         public constructor(fn: (value: any) => T, pattern: any);
 
         public fn: (value: any) => T;
-        public pattern: any;
+        public pattern: PatternMatcher;
 
         public [extractor](value: any, previousExtracted: object): PatternMatchResult;
     }
@@ -199,17 +199,17 @@ declare namespace Patterns {
 
 export { Patterns as patterns };
 
-declare namespace Is {
-    export function array<T>(patterns: Array<T>, restPattern?: any): Patterns.ArrayPattern<T>;
+declare namespace Aliases {
+    export function array<T>(patterns: Array<T>, restPattern?: any): Patterns.ArrayPattern;
     export function bind(pattern: any, id: PropertyKey): Patterns.BindPattern;
     export function equal<T>(value: T): Patterns.EqualPattern<T>;
     export function guarded(pattern: any, predicate: Predicate<object>): Patterns.GuardedPattern;
     export function id(id: PropertyKey): Patterns.IDPattern;
     export function ignore(): Patterns.IgnorePattern;
     export function instance<T extends HasInstance>(Class: T, pattern: any): Patterns.InstancePattern<T>;
-    export function map<K, V>(patterns: Map<K, V>, restPattern?: any): Patterns.MapPattern<K, V>;
+    export function map<K>(patterns: Map<K, any>, restPattern?: any): Patterns.MapPattern<K>;
     export function oneOf<T>(...values: T[]): Patterns.MultiplePattern<T>;
-    export function object<T extends Object>(patterns: T, restPattern?: any): Patterns.ObjectPattern<T>;
+    export function object(patterns: object, restPattern?: any): Patterns.ObjectPattern;
     export function preguarded(predicate: Predicate<any>, pattern: any): Patterns.PreguardedPattern;
     export function inRange<T>(lowerBound: T, upperBound: T, exclusive?: boolean): Patterns.RangePattern<T>;
     export function string(string: string, restPattern: any): Patterns.StringPattern;
@@ -217,7 +217,7 @@ declare namespace Is {
     export function view<T>(fn: (value: any) => T, pattern: any): Patterns.ViewPattern<T>;
 }
 
-export { Is as is };
+export { Aliases as is };
 
 export const $: ((id: PropertyKey) => Patterns.IDPattern) & { [key: string]: Patterns.IDPattern };
 export function $$<T extends HasInstance>(Class: T, pattern: any): Patterns.InstancePattern<T>;

@@ -11,9 +11,9 @@ class ArrayPattern extends Pattern {
             throw new TypeError('Given patterns must be in an array');
         }
 
-        this.patterns = patterns;
-        this.restPattern = restPattern;
+        this.patterns = patterns.map(Pattern.patternOf);
         this.rest = arguments.length >= 2;
+        this.restPattern = this.rest ? Pattern.patternOf(restPattern) : null;
     }
 
     [extractor](value, previousExtracted) {
@@ -27,12 +27,11 @@ class ArrayPattern extends Pattern {
 
         let innerExtracted = {};
         for (let i = 0; i < this.patterns.length; i++) {
-            const pattern = Pattern.patternOf(this.patterns[i]);
-            if (pattern[ignored]) {
+            if (this.patterns[i][ignored]) {
                 continue;
             }
 
-            const { matched, extracted } = pattern[extractor](value[i], Immutable.assign(previousExtracted, innerExtracted));
+            const { matched, extracted } = this.patterns[i][extractor](value[i], Immutable.assign(previousExtracted, innerExtracted));
             if (!matched) {
                 return { matched: false };
             }
@@ -40,10 +39,9 @@ class ArrayPattern extends Pattern {
             innerExtracted = Immutable.assign(innerExtracted, extracted);
         }
 
-        const restPattern = Pattern.patternOf(this.restPattern);
-        if (this.rest && !restPattern[ignored]) {
+        if (this.rest && !this.restPattern[ignored]) {
             const restValues = value.slice(this.patterns.length);
-            const { matched, extracted } = restPattern[extractor](restValues, Immutable.assign(previousExtracted, innerExtracted));
+            const { matched, extracted } = this.restPattern[extractor](restValues, Immutable.assign(previousExtracted, innerExtracted));
             if (!matched) {
                 return { matched: false };
             }

@@ -6,12 +6,12 @@ class PreguardedPattern extends Pattern {
         super();
 
         this.predicate = predicate;
-        this.pattern = pattern;
+        this.pattern = Pattern.patternOf(pattern);
     }
 
     [extractor](value, previousExtracted) {
         if (this.predicate(value)) {
-            return Pattern.patternOf(this.pattern)[extractor](value, previousExtracted);
+            return this.pattern[extractor](value, previousExtracted);
         }
 
         return { matched: false };

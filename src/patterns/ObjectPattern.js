@@ -8,9 +8,17 @@ class ObjectPattern extends Pattern {
     constructor(patterns, restPattern) {
         super();
 
-        this.patterns = patterns;
-        this.restPattern = restPattern;
+        if (patterns == null || typeof patterns !== 'object') {
+            throw new TypeError('Given patterns must be in an object');
+        }
+
+        this.patterns = ObjectPattern.getOwnPropertyKeys(patterns).reduce((acc, k) => {
+            acc[k] = Pattern.patternOf(patterns[k]);
+            return acc;
+        }, {});
+
         this.rest = arguments.length >= 2;
+        this.restPattern = this.rest ? Pattern.patternOf(restPattern) : null;
     }
 
     [extractor](value, previousExtracted) {
@@ -25,12 +33,11 @@ class ObjectPattern extends Pattern {
                 return { matched: false };
             }
 
-            const pattern = Pattern.patternOf(this.patterns[key]);
-            if (pattern[ignored]) {
+            if (this.patterns[key][ignored]) {
                 continue;
             }
 
-            const { matched, extracted } = pattern[extractor](value[key], Immutable.assign(previousExtracted, innerExtracted));
+            const { matched, extracted } = this.patterns[key][extractor](value[key], Immutable.assign(previousExtracted, innerExtracted));
             if (!matched) {
                 return { matched: false };
             }
@@ -38,8 +45,7 @@ class ObjectPattern extends Pattern {
             innerExtracted = Immutable.assign(innerExtracted, extracted);
         }
 
-        const restPattern = Pattern.patternOf(this.restPattern);
-        if (this.rest && !restPattern[ignored]) {
+        if (this.rest && !this.restPattern[ignored]) {
             const restObject = ObjectPattern.getOwnPropertyKeys(value)
                 .filter(k => !patternKeys.includes(k))
                 .reduce((acc, k) => {
@@ -47,7 +53,7 @@ class ObjectPattern extends Pattern {
                     return acc;
                 }, {});
 
-            const { matched, extracted } = restPattern[extractor](restObject, Immutable.assign(previousExtracted, innerExtracted));
+            const { matched, extracted } = this.restPattern[extractor](restObject, Immutable.assign(previousExtracted, innerExtracted));
             if (!matched) {
                 return { matched: false };
             }

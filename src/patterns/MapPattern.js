@@ -11,9 +11,9 @@ class MapPattern extends Pattern {
             throw new TypeError('Given patterns must be in a Map');
         }
 
-        this.patterns = patterns;
-        this.restPattern = restPattern;
+        this.patterns = new Map([...patterns.entries()].map(([k, v]) => [k, Pattern.patternOf(v)]));
         this.rest = arguments.length >= 2;
+        this.restPattern = this.rest ? Pattern.patternOf(restPattern) : null;
     }
 
     [extractor](value, previousExtracted) {
@@ -22,12 +22,11 @@ class MapPattern extends Pattern {
         }
 
         let innerExtracted = {};
-        for (const [key, patternValue] of this.patterns) {
+        for (const [key, pattern] of this.patterns) {
             if (!value.has(key)) {
                 return { matched: false };
             }
 
-            const pattern = Pattern.patternOf(patternValue);
             if (pattern[ignored]) {
                 continue;
             }
@@ -40,8 +39,7 @@ class MapPattern extends Pattern {
             innerExtracted = Immutable.assign(innerExtracted, extracted);
         }
 
-        const restPattern = Pattern.patternOf(this.restPattern);
-        if (this.rest && !restPattern[ignored]) {
+        if (this.rest && !this.restPattern[ignored]) {
             const restMap = new Map();
             for (const [key, mapValue] of value) {
                 if (!this.patterns.has(key)) {
@@ -49,7 +47,7 @@ class MapPattern extends Pattern {
                 }
             }
 
-            const { matched, extracted } = restPattern[extractor](restMap, Immutable.assign(previousExtracted, innerExtracted));
+            const { matched, extracted } = this.restPattern[extractor](restMap, Immutable.assign(previousExtracted, innerExtracted));
             if (!matched) {
                 return { matched: false };
             }

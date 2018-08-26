@@ -6,11 +6,11 @@ class ViewPattern extends Pattern {
         super();
 
         this.fn = fn;
-        this.pattern = pattern;
+        this.pattern = Pattern.patternOf(pattern);
     }
 
     [extractor](value, previousExtracted) {
-        return Pattern.patternOf(this.pattern)[extractor](this.fn(value), previousExtracted);
+        return this.pattern[extractor](this.fn(value), previousExtracted);
     }
 }
 

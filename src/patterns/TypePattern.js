@@ -6,12 +6,12 @@ class TypePattern extends Pattern {
         super();
 
         this.type = type;
-        this.pattern = pattern;
+        this.pattern = Pattern.patternOf(pattern);
     }
 
     [extractor](value, previousExtracted) {
         if (typeof value === this.type) {
-            return Pattern.patternOf(this.pattern)[extractor](value, previousExtracted);
+            return this.pattern[extractor](value, previousExtracted);
         }
 
         return { matched: false };

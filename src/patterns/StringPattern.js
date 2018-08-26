@@ -6,7 +6,7 @@ class StringPattern extends Pattern {
         super();
 
         this.string = string;
-        this.restPattern = restPattern;
+        this.restPattern = Pattern.patternOf(restPattern);
     }
 
     [extractor](value, previousExtracted) {
@@ -18,7 +18,7 @@ class StringPattern extends Pattern {
             return { matched: false };
         }
 
-        return Pattern.patternOf(this.restPattern)[extractor](value.slice(this.string.length), previousExtracted);
+        return this.restPattern[extractor](value.slice(this.string.length), previousExtracted);
     }
 }
 
