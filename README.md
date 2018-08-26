@@ -1,6 +1,8 @@
 # Headpats
 
 Pattern matching in JavaScript without new syntax.  
+See the [guide](./docs/0.%20How%20to%20Use.md) on how to use Headpats!  
+Refer to the [documentation](./docs) for specific information on pattern matching and built-in features.  
 
 ## Examples
 
@@ -96,7 +98,3 @@ const map = pat
 map([1, 2, 3, 4], x => x * 2)
 → [2, 4, 6, 8]
 ```
-
-## Documentation
-
-Refer to the [documentation folder](./docs) for information on how to implement pattern matching and built-in features.  
