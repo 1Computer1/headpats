@@ -26,7 +26,7 @@ should('match primitive values', () => {
         .case(1, () => 'one')
         .case(2, () => 'two');
 
-    assert.strictEqual(fn(1), 'ons');
+    assert.strictEqual(fn(1), 'one');
     assert.strictEqual(fn(2), 'two');
 });
 
