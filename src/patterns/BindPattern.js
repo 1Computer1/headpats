@@ -11,7 +11,7 @@ class BindPattern extends Pattern {
     }
 
     [extractor](value, previousExtracted) {
-        if (this.id in previousExtracted && value !== previousExtracted[this.id]) {
+        if (this.id in previousExtracted && !Object.is(value, previousExtracted[this.id])) {
             return { matched: false };
         }
 
