@@ -2,42 +2,61 @@ type JavaScriptType = 'undefined' | 'boolean' | 'number' | 'bigint' | 'string' |
 
 type Predicate<T> = (value: T) => boolean;
 
-type Consumer<T, R> = (value: T) => R;
+type Function<T, R> = (value: T) => R;
 
 interface HasInstance {
     [Symbol.hasInstance](instance: any): boolean;
 }
 
-export type PatternOf<T> = T extends PatternMatcher
-    ? PatternMatcher
-    : T extends any[]
-        ? Patterns.ArrayPattern
-        : T extends Map<infer K, any>
-            ? Patterns.MapPattern<K>
-            : T extends Object
-                ? Patterns.ObjectPattern
-                : Patterns.EqualPattern<T>;
+export type PatternOf<T> = T extends PatternMatcher ? PatternMatcher
+    : T extends any[] ? Patterns.ArrayPattern
+    : T extends Map<infer K, any> ? Patterns.MapPattern<K>
+    : T extends Object ? Patterns.ObjectPattern
+    : Patterns.EqualPattern<T>;
 
 export interface PatternMatchResult {
     matched: boolean;
-    extracted?: object;
+    extracted?: any;
 }
 
 export interface PatternMatcher {
     [ignored]?: boolean;
-    [extractor](value: any, previousExtracted: object): PatternMatchResult;
+    [extractor](value: any, previousExtracted: any): PatternMatchResult;
 }
 
-export type Cases = ((value: any) => any) & {
-    cases: [any, Consumer<object, any>][];
-    case(pattern: any, cb: Consumer<object, any>): Cases;
-    caseGuarded(pattern: any, predicate: Predicate<object>, cb: Consumer<object, any>): Cases;
+export type Cases<R1> = ((value: any) => R1) & {
+    cases: [PatternMatcher, Function<any, any>][];
+    case<R2>(pattern: any, cb: Function<any, R2>): Cases<R1 | R2>;
+    caseGuarded<R2>(pattern: any, predicate: Predicate<any>, cb: Function<any, R2>): Cases<R1 | R2>;
 };
 
-export type Clauses = ((value: any) => any) & {
-    clauses: [Patterns.Pattern, Consumer<object, any>][];
-    clause(...args: any[]): Clauses;
-    clauseGuarded(...args: any[]): Clauses;
+export type Clauses<R1> = ((...values: any[]) => R1) & {
+    clauses: [Patterns.Pattern, Function<any, R1>][];
+
+    // TypeScript does not support having types separate last argument so we have to have a lot of overloads.
+    clause<R2>(cb: Function<any, R2>): Clauses<R1 | R2>;
+    clause<R2>(a1: any, cb: Function<any, R2>): Clauses<R1 | R2>;
+    clause<R2>(a1: any, a2: any, cb: Function<any, R2>): Clauses<R1 | R2>;
+    clause<R2>(a1: any, a2: any, a3: any, cb: Function<any, R2>): Clauses<R1 | R2>;
+    clause<R2>(a1: any, a2: any, a3: any, a4: any, cb: Function<any, R2>): Clauses<R1 | R2>;
+    clause<R2>(a1: any, a2: any, a3: any, a4: any, a5: any, cb: Function<any, R2>): Clauses<R1 | R2>;
+    clause<R2>(a1: any, a2: any, a3: any, a4: any, a5: any, a6: any, cb: Function<any, R2>): Clauses<R1 | R2>;
+    clause<R2>(a1: any, a2: any, a3: any, a4: any, a5: any, a6: any, a7: any, cb: Function<any, R2>): Clauses<R1 | R2>;
+    clause<R2>(a1: any, a2: any, a3: any, a4: any, a5: any, a6: any, a7: any, a8: any, cb: Function<any, R2>): Clauses<R1 | R2>;
+    clause<R2>(a1: any, a2: any, a3: any, a4: any, a5: any, a6: any, a7: any, a8: any, a9: any, cb: Function<any, R2>): Clauses<R1 | R2>;
+    clause<R2>(a1: any, a2: any, a3: any, a4: any, a5: any, a6: any, a7: any, a8: any, a9: any, a10: any, cb: Function<any, R2>): Clauses<R1 | R2>;
+
+    clauseGuarded<R2>(predicate: Predicate<any>, cb: Function<any, R2>): Clauses<R1 | R2>;
+    clauseGuarded<R2>(a1: any, predicate: Predicate<any>, cb: Function<any, R2>): Clauses<R1 | R2>;
+    clauseGuarded<R2>(a1: any, a2: any, predicate: Predicate<any>, cb: Function<any, R2>): Clauses<R1 | R2>;
+    clauseGuarded<R2>(a1: any, a2: any, a3: any, predicate: Predicate<any>, cb: Function<any, R2>): Clauses<R1 | R2>;
+    clauseGuarded<R2>(a1: any, a2: any, a3: any, a4: any, predicate: Predicate<any>, cb: Function<any, R2>): Clauses<R1 | R2>;
+    clauseGuarded<R2>(a1: any, a2: any, a3: any, a4: any, a5: any, predicate: Predicate<any>, cb: Function<any, R2>): Clauses<R1 | R2>;
+    clauseGuarded<R2>(a1: any, a2: any, a3: any, a4: any, a5: any, a6: any, predicate: Predicate<any>, cb: Function<any, R2>): Clauses<R1 | R2>;
+    clauseGuarded<R2>(a1: any, a2: any, a3: any, a4: any, a5: any, a6: any, a7: any, predicate: Predicate<any>, cb: Function<any, R2>): Clauses<R1 | R2>;
+    clauseGuarded<R2>(a1: any, a2: any, a3: any, a4: any, a5: any, a6: any, a7: any, a8: any, predicate: Predicate<any>, cb: Function<any, R2>): Clauses<R1 | R2>;
+    clauseGuarded<R2>(a1: any, a2: any, a3: any, a4: any, a5: any, a6: any, a7: any, a8: any, a9: any, predicate: Predicate<any>, cb: Function<any, R2>): Clauses<R1 | R2>;
+    clauseGuarded<R2>(a1: any, a2: any, a3: any, a4: any, a5: any, a6: any, a7: any, a8: any, a9: any, a10: any, predicate: Predicate<any>, cb: Function<any, R2>): Clauses<R1 | R2>;
 };
 
 export const extractor: unique symbol;
@@ -45,9 +64,9 @@ export const ignored: unique symbol;
 export const rest: unique symbol;
 
 declare namespace Functions {
-    export function cases(): Cases;
-    export function clauses(): Clauses;
-    export function matcher(pattern: any): (value: any) => object;
+    export function cases<R>(): Cases<R>;
+    export function clauses<R>(): Clauses<R>;
+    export function matcher(pattern: any): (value: any) => any;
     export function tester(pattern: any): (value: any) => boolean;
 }
 
@@ -55,25 +74,25 @@ export { Functions as functions };
 
 declare namespace Patterns {
     export abstract class Pattern implements PatternMatcher {
-        public abstract [extractor](value: any, previousExtracted: object): PatternMatchResult;
-        public match(value: any): object;
+        public abstract [extractor](value: any, previousExtracted: any): PatternMatchResult;
+        public match(value: any): any;
         public test(value: any): boolean;
 
         public static patternOf<T>(pattern: T): PatternOf<T>;
         public static patternOfArray(array: any[]): Patterns.ArrayPattern;
         public static patternOfMap<K>(map: Map<K, any>): Patterns.MapPattern<K>;
-        public static patternOfObject(object: object): Patterns.ObjectPattern;
+        public static patternOfObject(object: any): Patterns.ObjectPattern;
         public static patternOfPrimitive<T>(value: T): Patterns.EqualPattern<T>;
     }
 
     export class ArrayPattern extends Pattern {
-        public constructor(patterns: Array<any>, restPattern?: any);
+        public constructor(patterns: any[], restPattern?: any);
 
-        public patterns: Array<PatternMatcher>;
+        public patterns: PatternMatcher[];
         public rest: boolean;
         public restPattern?: PatternMatcher;
 
-        public [extractor](value: any, previousExtracted: object): PatternMatchResult;
+        public [extractor](value: any, previousExtracted: any): PatternMatchResult;
     }
 
     export class BindPattern extends Pattern {
@@ -82,7 +101,7 @@ declare namespace Patterns {
         public id: PropertyKey;
         public pattern: PatternMatcher;
 
-        public [extractor](value: any, previousExtracted: object): PatternMatchResult;
+        public [extractor](value: any, previousExtracted: any): PatternMatchResult;
     }
 
     export class EqualPattern<T> extends Pattern {
@@ -90,16 +109,16 @@ declare namespace Patterns {
 
         public value: T;
 
-        public [extractor](value: any, previousExtracted: object): PatternMatchResult;
+        public [extractor](value: any, previousExtracted: any): PatternMatchResult;
     }
 
     export class GuardedPattern extends Pattern {
-        public constructor(pattern: any, predicate: Predicate<object>);
+        public constructor(pattern: any, predicate: Predicate<any>);
 
         public pattern: PatternMatcher;
-        public predicate: Predicate<object>;
+        public predicate: Predicate<any>;
 
-        public [extractor](value: any, previousExtracted: object): PatternMatchResult;
+        public [extractor](value: any, previousExtracted: any): PatternMatchResult;
     }
 
     export class IDPattern extends Pattern {
@@ -107,7 +126,7 @@ declare namespace Patterns {
 
         public id: PropertyKey;
 
-        public [extractor](value: any, previousExtracted: object): PatternMatchResult;
+        public [extractor](value: any, previousExtracted: any): PatternMatchResult;
     }
 
     export class IgnorePattern extends Pattern {
@@ -115,7 +134,7 @@ declare namespace Patterns {
 
         public [ignored]: true;
 
-        public [extractor](value: any, previousExtracted: object): PatternMatchResult;
+        public [extractor](value: any, previousExtracted: any): PatternMatchResult;
     }
 
     export class InstancePattern<T extends HasInstance> extends Pattern {
@@ -124,7 +143,7 @@ declare namespace Patterns {
         public Class: T;
         public pattern: PatternMatcher;
 
-        public [extractor](value: any, previousExtracted: object): PatternMatchResult;
+        public [extractor](value: any, previousExtracted: any): PatternMatchResult;
     }
 
     export class MapPattern<K> extends Pattern {
@@ -134,7 +153,7 @@ declare namespace Patterns {
         public rest: boolean;
         public restPattern?: PatternMatcher;
 
-        public [extractor](value: any, previousExtracted: object): PatternMatchResult;
+        public [extractor](value: any, previousExtracted: any): PatternMatchResult;
     }
 
     export class MultiplePattern<T> extends Pattern {
@@ -142,17 +161,17 @@ declare namespace Patterns {
 
         public values: T[];
 
-        public [extractor](value: any, previousExtracted: object): PatternMatchResult;
+        public [extractor](value: any, previousExtracted: any): PatternMatchResult;
     }
 
     export class ObjectPattern extends Pattern {
-        public constructor(patterns: any, restPattern?: any);
+        public constructor(patterns: object, restPattern?: any);
 
         public patterns: { [key: string]: PatternMatcher };
         public rest: boolean;
         public restPattern?: PatternMatcher;
 
-        public [extractor](value: any, previousExtracted: object): PatternMatchResult;
+        public [extractor](value: any, previousExtracted: any): PatternMatchResult;
     }
 
     export class PreguardedPattern extends Pattern {
@@ -161,7 +180,7 @@ declare namespace Patterns {
         public pattern: PatternMatcher;
         public predicate: Predicate<any>;
 
-        public [extractor](value: any, previousExtracted: object): PatternMatchResult;
+        public [extractor](value: any, previousExtracted: any): PatternMatchResult;
     }
 
     export class RangePattern<T> extends Pattern {
@@ -171,7 +190,7 @@ declare namespace Patterns {
         public lowerBound: T;
         public upperBound: T;
 
-        public [extractor](value: any, previousExtracted: object): PatternMatchResult;
+        public [extractor](value: any, previousExtracted: any): PatternMatchResult;
     }
 
     export class StringPattern extends Pattern {
@@ -180,7 +199,7 @@ declare namespace Patterns {
         public restPattern: PatternMatcher;
         public string: string;
 
-        public [extractor](value: any, previousExtracted: object): PatternMatchResult;
+        public [extractor](value: any, previousExtracted: any): PatternMatchResult;
     }
 
     export class TypePattern<T extends JavaScriptType> extends Pattern {
@@ -189,7 +208,7 @@ declare namespace Patterns {
         public pattern: PatternMatcher;
         public type: T;
 
-        public [extractor](value: any, previousExtracted: object): PatternMatchResult;
+        public [extractor](value: any, previousExtracted: any): PatternMatchResult;
     }
 
     export class ViewPattern<T> extends Pattern {
@@ -198,14 +217,14 @@ declare namespace Patterns {
         public fn: (value: any) => T;
         public pattern: PatternMatcher;
 
-        public [extractor](value: any, previousExtracted: object): PatternMatchResult;
+        public [extractor](value: any, previousExtracted: any): PatternMatchResult;
     }
 }
 
 export { Patterns as patterns };
 
 declare namespace Aliases {
-    export function array<T>(patterns: Array<T>, restPattern?: any): Patterns.ArrayPattern;
+    export function array<T>(patterns: T[], restPattern?: any): Patterns.ArrayPattern;
     export function bind(pattern: any, id: PropertyKey): Patterns.BindPattern;
     export function equal<T>(value: T): Patterns.EqualPattern<T>;
     export function guarded(pattern: any, predicate: Predicate<object>): Patterns.GuardedPattern;
@@ -225,17 +244,37 @@ declare namespace Aliases {
 export { Aliases as is };
 
 export const $: ((id: PropertyKey) => Patterns.IDPattern) & { [key: string]: Patterns.IDPattern };
-export function $$<T extends (JavaScriptType | HasInstance)>(thing: T, pattern: any): T extends HasInstance
-    ? Patterns.InstancePattern<T>
-    : Patterns.TypePattern<Exclude<JavaScriptType, T>>;
+export function $$<T extends (JavaScriptType | HasInstance)>(thing: T, pattern: any): T extends HasInstance ? Patterns.InstancePattern<T> : Patterns.TypePattern<Exclude<JavaScriptType, T>>;
 export const _: Patterns.IgnorePattern;
 
-declare function kase(pattern: any, cb: Consumer<object, any>): Cases;
-export function caseGuarded(pattern: any, predicate: Predicate<object>, cb: Consumer<object, any>): Cases;
+declare function kase<T>(pattern: any, cb: Function<any, T>): Cases<T>;
+export function caseGuarded<T>(pattern: any, predicate: Predicate<any>, cb: Function<any, T>): Cases<T>;
 export { kase as case };
 
-export function clause(...args: any[]): Clauses;
-export function clauseGuarded(...args: any[]): Clauses;
+// TypeScript does not support having types separate last argument so we have to have a lot of overloads.
+export function clause<T>(cb: Function<any, T>): Clauses<T>;
+export function clause<T>(a1: any, cb: Function<any, T>): Clauses<T>;
+export function clause<T>(a1: any, a2: any, cb: Function<any, T>): Clauses<T>;
+export function clause<T>(a1: any, a2: any, a3: any, cb: Function<any, T>): Clauses<T>;
+export function clause<T>(a1: any, a2: any, a3: any, a4: any, cb: Function<any, T>): Clauses<T>;
+export function clause<T>(a1: any, a2: any, a3: any, a4: any, a5: any, cb: Function<any, T>): Clauses<T>;
+export function clause<T>(a1: any, a2: any, a3: any, a4: any, a5: any, a6: any, cb: Function<any, T>): Clauses<T>;
+export function clause<T>(a1: any, a2: any, a3: any, a4: any, a5: any, a6: any, a7: any, cb: Function<any, T>): Clauses<T>;
+export function clause<T>(a1: any, a2: any, a3: any, a4: any, a5: any, a6: any, a7: any, a8: any, cb: Function<any, T>): Clauses<T>;
+export function clause<T>(a1: any, a2: any, a3: any, a4: any, a5: any, a6: any, a7: any, a8: any, a9: any, cb: Function<any, T>): Clauses<T>;
+export function clause<T>(a1: any, a2: any, a3: any, a4: any, a5: any, a6: any, a7: any, a8: any, a9: any, a10: any, cb: Function<any, T>): Clauses<T>;
 
-export function match(pattern: any, value: any): object;
+export function clauseGuarded<T>(predicate: Predicate<any>, cb: Function<any, T>): Clauses<T>;
+export function clauseGuarded<T>(a1: any, predicate: Predicate<any>, cb: Function<any, T>): Clauses<T>;
+export function clauseGuarded<T>(a1: any, a2: any, predicate: Predicate<any>, cb: Function<any, T>): Clauses<T>;
+export function clauseGuarded<T>(a1: any, a2: any, a3: any, predicate: Predicate<any>, cb: Function<any, T>): Clauses<T>;
+export function clauseGuarded<T>(a1: any, a2: any, a3: any, a4: any, predicate: Predicate<any>, cb: Function<any, T>): Clauses<T>;
+export function clauseGuarded<T>(a1: any, a2: any, a3: any, a4: any, a5: any, predicate: Predicate<any>, cb: Function<any, T>): Clauses<T>;
+export function clauseGuarded<T>(a1: any, a2: any, a3: any, a4: any, a5: any, a6: any, predicate: Predicate<any>, cb: Function<any, T>): Clauses<T>;
+export function clauseGuarded<T>(a1: any, a2: any, a3: any, a4: any, a5: any, a6: any, a7: any, predicate: Predicate<any>, cb: Function<any, T>): Clauses<T>;
+export function clauseGuarded<T>(a1: any, a2: any, a3: any, a4: any, a5: any, a6: any, a7: any, a8: any, predicate: Predicate<any>, cb: Function<any, T>): Clauses<T>;
+export function clauseGuarded<T>(a1: any, a2: any, a3: any, a4: any, a5: any, a6: any, a7: any, a8: any, a9: any, predicate: Predicate<any>, cb: Function<any, T>): Clauses<T>;
+export function clauseGuarded<T>(a1: any, a2: any, a3: any, a4: any, a5: any, a6: any, a7: any, a8: any, a9: any, a10: any, predicate: Predicate<any>, cb: Function<any, T>): Clauses<T>;
+
+export function match(pattern: any, value: any): any;
 export function test(pattern: any, value: any): boolean;
