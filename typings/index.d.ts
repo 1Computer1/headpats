@@ -31,15 +31,13 @@ export interface PatternMatcher {
 export type Cases = ((value: any) => any) & {
     cases: [any, Consumer<object, any>][];
     case(pattern: any, cb: Consumer<object, any>): Cases;
-    caseGuarded(pattern: any, predicated: Predicate<object>, cb: Consumer<object, any>): Cases;
+    caseGuarded(pattern: any, predicate: Predicate<object>, cb: Consumer<object, any>): Cases;
 };
 
 export type Clauses = ((value: any) => any) & {
     clauses: [Patterns.Pattern, Consumer<object, any>][];
-    clause(patterns: any[], cb: Consumer<object, any>): Clauses;
-    clause(patterns: any[], restPattern: any, cb: Consumer<object, any>): Clauses;
-    clauseGuarded(patterns: any[], predicate: Predicate<object>, cb: Consumer<object, any>): Clauses;
-    clauseGuarded(patterns: any[], restPattern: any, predicate: Predicate<object>, cb: Consumer<object, any>): Clauses;
+    clause(...args: any[]): Clauses;
+    clauseGuarded(...args: any[]): Clauses;
 };
 
 export const extractor: unique symbol;
@@ -231,13 +229,11 @@ export function $$<T extends HasInstance>(Class: T, pattern: any): Patterns.Inst
 export const _: Patterns.IgnorePattern;
 
 declare function kase(pattern: any, cb: Consumer<object, any>): Cases;
-export function caseGuarded(pattern: any, predicated: Predicate<object>, cb: Consumer<object, any>): Cases;
+export function caseGuarded(pattern: any, predicate: Predicate<object>, cb: Consumer<object, any>): Cases;
 export { kase as case };
 
-export function clause(patterns: any[], cb: Consumer<object, any>): Clauses;
-export function clause(patterns: any[], restPattern: any, cb: Consumer<object, any>): Clauses;
-export function clauseGuarded(patterns: any[], predicate: Predicate<object>, cb: Consumer<object, any>): Clauses;
-export function clauseGuarded(patterns: any[], restPattern: any, predicate: Predicate<object>, cb: Consumer<object, any>): Clauses;
+export function clause(...args: any[]): Clauses;
+export function clauseGuarded(...args: any[]): Clauses;
 
 export function match(pattern: any, value: any): object;
 export function test(pattern: any, value: any): boolean;

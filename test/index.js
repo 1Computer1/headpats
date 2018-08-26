@@ -218,10 +218,10 @@ should('extract a match using a helper function', () => {
 
 should('create a function with clauses', () => {
     const fn = pat
-        .clause([$.x], ({ x }) => x)
-        .clause([$.x, $.y], ({ x, y }) => x + y)
-        .clause([$.x, $.y, $.z], ({ x, y, z }) => x + y + z)
-        .clause([$.x], $.xs, ({ x, xs }) => xs.concat(x));
+        .clause($.x, ({ x }) => x)
+        .clause($.x, $.y, ({ x, y }) => x + y)
+        .clause($.x, $.y, $.z, ({ x, y, z }) => x + y + z)
+        .clause($.x, [rest, $.xs], ({ x, xs }) => xs.concat(x));
 
     assert.strictEqual(fn(1), 1);
     assert.strictEqual(fn(1, 2), 3);
@@ -231,8 +231,8 @@ should('create a function with clauses', () => {
 
 should('create a function with guarded clauses', () => {
     const fn = pat
-        .clauseGuarded([$.x], ({ x }) => x === 1, ({ x }) => x)
-        .clause([_], () => 0);
+        .clauseGuarded($.x, ({ x }) => x === 1, ({ x }) => x)
+        .clause(_, () => 0);
 
     assert.strictEqual(fn(1), 1);
     assert.strictEqual(fn(2), 0);
@@ -257,8 +257,8 @@ should('use a custom matcher', () => {
 
 should('do a map over an array', () => {
     const map = pat
-        .clause([[], _], () => [])
-        .clause([[$.x, [rest, $.xs]], $.f], ({ x, xs, f }) => [f(x)].concat(map(xs, f)));
+        .clause([], _, () => [])
+        .clause([$.x, [rest, $.xs]], $.f, ({ x, xs, f }) => [f(x)].concat(map(xs, f)));
 
     assert.deepStrictEqual(map([1, 2, 3, 4], x => x * 2), [2, 4, 6, 8]);
 });

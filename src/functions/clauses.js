@@ -1,25 +1,23 @@
-const ArrayPattern = require('../patterns/ArrayPattern');
 const extractor = require('../util/extractor');
 const GuardedPattern = require('../patterns/GuardedPattern');
+const Pattern = require('../patterns/Pattern');
 
 const clauses = () => {
     const context = {
         clauses: [],
         clause(...args) {
-            if (args.length === 2) {
-                this.clauses.push([new ArrayPattern(args[0]), args[1]]);
-            } else {
-                this.clauses.push([new ArrayPattern(args[0], args[1]), args[2]]);
-            }
+            this.clauses.push([
+                Pattern.patternOfArray(args.slice(0, -1)),
+                args[args.length - 1]
+            ]);
 
             return this;
         },
         clauseGuarded(...args) {
-            if (args.length === 3) {
-                this.clauses.push([new GuardedPattern(new ArrayPattern(args[0]), args[1]), args[2]]);
-            } else {
-                this.clauses.push([new GuardedPattern(new ArrayPattern(args[0], args[1]), args[2]), args[3]]);
-            }
+            this.clauses.push([
+                new GuardedPattern(Pattern.patternOfArray(args.slice(0, -2)), args[args.length - 2]),
+                args[args.length - 1]
+            ]);
 
             return this;
         }
