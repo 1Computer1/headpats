@@ -11,7 +11,7 @@ const pat = require('headpats');
 const { $, $$, _, is, rest } = pat;
 ```
 
-**Stringly Typed Function**
+**Stringly Typed Function**  
 
 ```js
 function doOperation(operation, a, b) {
@@ -22,7 +22,7 @@ function doOperation(operation, a, b) {
 }
 ```
 
-**Safe Traversal**
+**Safe Traversal**  
 
 ```js
 const o = { x: { y: { z: 10 } } };
@@ -34,7 +34,7 @@ pat.match({ x: { y: { what: $.what } } }, o)
 → null
 ```
 
-**Recursive Map**
+**Recursive Map**  
 
 ```js
 const map = pat
@@ -45,7 +45,7 @@ map([1, 2, 3, 4], x => x * 2)
 → [2, 4, 6, 8]
 ```
 
-**Option**
+**Option**  
 
 ```js
 class Option {}
