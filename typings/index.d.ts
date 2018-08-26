@@ -62,6 +62,10 @@ declare namespace Patterns {
         public test(value: any): boolean;
 
         public static patternOf<T>(pattern: T): PatternOf<T>;
+        public static patternOfArray(array: any[]): Patterns.ArrayPattern;
+        public static patternOfMap<K>(map: Map<K, any>): Patterns.MapPattern<K>;
+        public static patternOfObject(object: object): Patterns.ObjectPattern;
+        public static patternOfPrimitive<T>(value: T): Patterns.EqualPattern<T>;
     }
 
     export class ArrayPattern extends Pattern {

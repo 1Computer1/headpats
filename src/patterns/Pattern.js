@@ -19,44 +19,60 @@ class Pattern {
         return matched ? extracted : null;
     }
 
-    static patternOf(pattern) {
-        const ArrayPattern = require('./ArrayPattern');
-        const EqualPattern = require('./EqualPattern');
-        const MapPattern = require('./MapPattern');
-        const ObjectPattern = require('./ObjectPattern');
-
-        if (pattern == null || pattern[extractor] == null) {
-            if (isPrimitive(pattern)) {
-                return new EqualPattern(pattern);
+    static patternOf(value) {
+        if (value == null || value[extractor] == null) {
+            if (isPrimitive(value)) {
+                return Pattern.patternOfPrimitive(value);
             }
 
-            if (Array.isArray(pattern)) {
-                const hasRest = Array.isArray(pattern[pattern.length - 1])
-                    && pattern[pattern.length - 1].length === 2
-                    && pattern[pattern.length - 1][0] === rest;
-                if (hasRest) {
-                    return new ArrayPattern(ImmutableArray.remove(pattern, -1), pattern[pattern.length - 1][1]);
-                }
-
-                return new ArrayPattern(pattern);
+            if (Array.isArray(value)) {
+                return Pattern.patternOfArray(value);
             }
 
-            if (pattern instanceof Map) {
-                if (pattern.has(rest)) {
-                    return new MapPattern(ImmutableMap.delete(pattern, rest), pattern.get(rest));
-                }
-
-                return new MapPattern(pattern);
+            if (value instanceof Map) {
+                return Pattern.patternOfMap(value);
             }
 
-            if (rest in pattern) {
-                return new ObjectPattern(Immutable.delete(pattern, rest), pattern[rest]);
-            }
-
-            return new ObjectPattern(pattern);
+            return Pattern.patternOfObject(value);
         }
 
-        return pattern;
+        return value;
+    }
+
+    static patternOfPrimitive(value) {
+        const EqualPattern = require('./EqualPattern');
+        return new EqualPattern(value);
+    }
+
+    static patternOfArray(array) {
+        const ArrayPattern = require('./ArrayPattern');
+        const hasRest = Array.isArray(array[array.length - 1])
+            && array[array.length - 1].length === 2
+            && array[array.length - 1][0] === rest;
+
+        if (hasRest) {
+            return new ArrayPattern(ImmutableArray.remove(array, -1), array[array.length - 1][1]);
+        }
+
+        return new ArrayPattern(array);
+    }
+
+    static patternOfMap(map) {
+        const MapPattern = require('./MapPattern');
+        if (map.has(rest)) {
+            return new MapPattern(ImmutableMap.delete(map, rest), map.get(rest));
+        }
+
+        return new MapPattern(map);
+    }
+
+    static patternOfObject(object) {
+        const ObjectPattern = require('./ObjectPattern');
+        if (rest in object) {
+            return new ObjectPattern(Immutable.delete(object, rest), object[rest]);
+        }
+
+        return new ObjectPattern(object);
     }
 }
 
