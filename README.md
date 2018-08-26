@@ -27,7 +27,7 @@ pat.match({ x: { y: { what: $.what } } }, o)
 → null
 ```
 
-**Recusive Map**
+**Recursive Map**
 
 ```js
 const map = pat
