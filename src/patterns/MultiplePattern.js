@@ -9,7 +9,7 @@ class MultiplePattern extends Pattern {
     }
 
     [extractor](value) {
-        if (this.values.some(x => x === value)) {
+        if (this.values.some(x => Object.is(x, value))) {
             return { matched: true, extracted: {} };
         }
 

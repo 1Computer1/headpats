@@ -9,7 +9,7 @@ class EqualPattern extends Pattern {
     }
 
     [extractor](value) {
-        return value === this.value
+        return Object.is(value, this.value)
             ? { matched: true, extracted: {} }
             : { matched: false };
     }
