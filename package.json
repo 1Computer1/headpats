@@ -1,6 +1,6 @@
 {
     "name": "headpats",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "Pattern matching without extra syntax.",
     "main": "./src/index.js",
     "types": "./typings/index.d.ts",
