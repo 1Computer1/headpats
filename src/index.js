@@ -43,7 +43,9 @@ module.exports = {
             return self(property);
         }
     }),
-    $$: (Class, pattern) => new patterns.InstancePattern(Class, pattern),
+    $$: (thing, pattern) => typeof thing === 'string'
+        ? new patterns.TypePattern(thing, pattern)
+        : new patterns.InstancePattern(thing, pattern),
     _: new patterns.IgnorePattern(),
 
     // Shortcut functions

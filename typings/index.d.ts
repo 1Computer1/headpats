@@ -225,7 +225,9 @@ declare namespace Aliases {
 export { Aliases as is };
 
 export const $: ((id: PropertyKey) => Patterns.IDPattern) & { [key: string]: Patterns.IDPattern };
-export function $$<T extends HasInstance>(Class: T, pattern: any): Patterns.InstancePattern<T>;
+export function $$<T extends (JavaScriptType | HasInstance)>(thing: T, pattern: any): T extends HasInstance
+    ? Patterns.InstancePattern<T>
+    : Patterns.TypePattern<Exclude<JavaScriptType, T>>;
 export const _: Patterns.IgnorePattern;
 
 declare function kase(pattern: any, cb: Consumer<object, any>): Cases;

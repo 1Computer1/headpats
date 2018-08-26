@@ -34,8 +34,8 @@ should('match primitive values', () => {
 
 should('match type with a string', () => {
     const fn = pat
-        .case(is.type('string', $.x), ({ x }) => x.toUpperCase())
-        .case(is.type('number', $.x), ({ x }) => x * 100);
+        .case($$('string', $.x), ({ x }) => x.toUpperCase())
+        .case($$('number', $.x), ({ x }) => x * 100);
 
     assert.deepStrictEqual(fn('hi'), 'HI');
     assert.deepStrictEqual(fn(1), 100);
