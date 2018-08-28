@@ -1,6 +1,6 @@
 # Headpats
 
-Pattern matching in JavaScript without new syntax.  
+Pattern matching and tagged unions in JavaScript without new syntax.  
 See the [guide](./docs/0.%20How%20to%20Use.md) on how to use Headpats!  
 Refer to the [documentation](./docs) for specific information on pattern matching and built-in features.  
 
@@ -63,19 +63,14 @@ pat.match([ok, $.num], divide(10, 2));
 → { num: 5 }
 ```
 
-**Option Enum**  
+**Option Type**  
 
 ```js
-class Option {}
-class None extends Option {}
-class Some extends Option {
-    constructor(x) {
-        this.x = x;
-    }
-}
+const Option = pat.union('Option', 'Some', 'None');
+const { Some, None } = Option;
 
 const double = pat
-    .case($$(Some, { x: $.x }), ({ x }) => new Some(x * 2))
+    .case($$(Some, $.x), ({ x }) => new Some(x * 2))
     .case($$(None, _), () => new None());
 
 double(new Some(5))
