@@ -1,9 +1,8 @@
-const extractor = require('../util/extractor');
+const { extractor, rest } = require('../util/symbols');
 const isPrimitive = require('../util/isPrimitive');
 const Immutable = require('../util/Immutable');
 const ImmutableArray = require('../util/ImmutableArray');
 const ImmutableMap = require('../util/ImmutableMap');
-const rest = require('../util/rest');
 
 class Pattern {
     [extractor]() {

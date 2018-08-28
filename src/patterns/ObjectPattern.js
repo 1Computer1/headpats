@@ -1,5 +1,4 @@
-const extractor = require('../util/extractor');
-const ignored = require('../util/ignored');
+const { extractor, ignored } = require('../util/symbols');
 const isPrimitive = require('../util/isPrimitive');
 const Immutable = require('../util/Immutable');
 const Pattern = require('./Pattern');

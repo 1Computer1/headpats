@@ -1,5 +1,4 @@
-const extractor = require('../util/extractor');
-const ignored = require('../util/ignored');
+const { extractor, ignored } = require('../util/symbols');
 const Pattern = require('./Pattern');
 
 class IgnorePattern extends Pattern {

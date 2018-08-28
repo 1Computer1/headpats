@@ -1,4 +1,4 @@
-const extractor = require('../util/extractor');
+const { extractor } = require('../util/symbols');
 const GuardedPattern = require('../patterns/GuardedPattern');
 const Pattern = require('../patterns/Pattern');
 

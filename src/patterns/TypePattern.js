@@ -1,4 +1,4 @@
-const extractor = require('../util/extractor');
+const { extractor } = require('../util/symbols');
 const Pattern = require('./Pattern');
 
 class TypePattern extends Pattern {
