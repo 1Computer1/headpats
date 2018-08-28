@@ -8,6 +8,16 @@ interface HasInstance {
     [Symbol.hasInstance](instance: any): boolean;
 }
 
+declare class UnionBase {}
+
+declare class TaggedType extends UnionBase {
+    constructor(...args: any[]);
+
+    public value: any;
+}
+
+export function union<K extends string>(unionName: string, ...types: (K | [K, ('array' | 'value')?])[]): typeof UnionBase & { [Key in K]: typeof TaggedType };
+
 export type PatternOf<T> = T extends PatternMatcher ? PatternMatcher
     : T extends any[] ? Patterns.ArrayPattern
     : T extends Map<infer K, any> ? Patterns.MapPattern<K>
@@ -202,6 +212,15 @@ declare namespace Patterns {
         public [extractor](value: any, previousExtracted: any): PatternMatchResult;
     }
 
+    export class TagPattern<T extends typeof UnionBase> extends Pattern {
+        public constructor(Class: T, pattern: any);
+
+        public Class: T;
+        public pattern: PatternMatcher;
+
+        public [extractor](value: any, previousExtracted: any): PatternMatchResult;
+    }
+
     export class TypePattern<T extends JavaScriptType> extends Pattern {
         public constructor(type: T, pattern: any);
 
@@ -237,6 +256,7 @@ declare namespace Aliases {
     export function preguarded(predicate: Predicate<any>, pattern: any): Patterns.PreguardedPattern;
     export function inRange<T>(lowerBound: T, upperBound: T, exclusive?: boolean): Patterns.RangePattern<T>;
     export function string(string: string, restPattern: any): Patterns.StringPattern;
+    export function tag<T extends typeof UnionBase>(Class: T, pattern: any): Patterns.TagPattern<T>;
     export function type<T extends JavaScriptType>(type: T, pattern: any): Patterns.TypePattern<T>;
     export function view<T>(fn: (value: any) => T, pattern: any): Patterns.ViewPattern<T>;
 }
@@ -244,7 +264,11 @@ declare namespace Aliases {
 export { Aliases as is };
 
 export const $: ((id: PropertyKey) => Patterns.IDPattern) & { [key: string]: Patterns.IDPattern };
-export function $$<T extends (JavaScriptType | HasInstance)>(thing: T, pattern: any): T extends HasInstance ? Patterns.InstancePattern<T> : Patterns.TypePattern<Exclude<JavaScriptType, T>>;
+export function $$<T extends (JavaScriptType | typeof UnionBase | HasInstance)>(thing: T, pattern: any):
+    T extends JavaScriptType ? Patterns.TypePattern<T>
+    : T extends typeof UnionBase ? Patterns.TagPattern<T>
+    : T extends HasInstance ? Patterns.InstancePattern<T>
+    : never;
 export const _: Patterns.IgnorePattern;
 
 declare function kase<T>(pattern: any, cb: Function<any, T>): Cases<T>;
