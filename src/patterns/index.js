@@ -7,6 +7,7 @@ module.exports = {
     RangePattern: require('./RangePattern'),
     TypePattern: require('./TypePattern'),
     InstancePattern: require('./InstancePattern'),
+    TagPattern: require('./TagPattern'),
     PreguardedPattern: require('./PreguardedPattern'),
     GuardedPattern: require('./GuardedPattern'),
     ArrayPattern: require('./ArrayPattern'),

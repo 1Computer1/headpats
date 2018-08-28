@@ -300,3 +300,32 @@ should('match a complicated thing', () => {
         xs: { zz: 15 }
     });
 });
+
+should('create a tagged union and check instanceof', () => {
+    const Option = pat.union('Maybe', 'Some', 'None');
+
+    const someOne = new Option.Some(1);
+    assert.strictEqual(someOne instanceof Option, true);
+    assert.strictEqual(someOne instanceof Option.Some, true);
+    assert.strictEqual(someOne instanceof Option.None, false);
+});
+
+should('error if instantiating tagged union', () => {
+    const Option = pat.union('Maybe', 'Some', 'None');
+    assert.throws(() => new Option(), /^TypeError: This class may not be instantiated$/);
+});
+
+should('create a tagged union and pattern match value kind', () => {
+    const Option = pat.union('Maybe', 'Some', 'None');
+
+    const someOne = new Option.Some(1);
+    assert.deepStrictEqual(pat.match($$(Option.Some, $.x), someOne), { x: 1 });
+    assert.deepStrictEqual(pat.match(is.instance(Option.Some, $.x), someOne), { x: someOne });
+});
+
+should('create a tagged union and pattern match array kind', () => {
+    const Tree = pat.union('Tree', ['Branch', 'array'], 'Leaf');
+
+    const tree = new Tree.Branch(new Tree.Leaf(1), new Tree.Leaf(2));
+    assert.deepStrictEqual(pat.match($$(Tree.Branch, [$$(Tree.Leaf, $.l1), $$(Tree.Leaf, $.l2)]), tree), { l1: 1, l2: 2 });
+});

@@ -1,6 +1,8 @@
 const functions = require('./functions');
 const patterns = require('./patterns');
 const symbols = require('./util/symbols');
+const union = require('./union/union');
+const UnionBase = require('./union/UnionBase');
 
 module.exports = {
     // Symbols
@@ -11,6 +13,7 @@ module.exports = {
     // Usable things
     patterns,
     functions,
+    union,
 
     // Matcher aliases
     is: {
@@ -21,6 +24,7 @@ module.exports = {
         inRange: (lowerBound, upperBound, exclusive = true) => new patterns.RangePattern(lowerBound, upperBound, exclusive),
         type: (type, pattern) => new patterns.TypePattern(type, pattern),
         instance: (Class, pattern) => new patterns.InstancePattern(Class, pattern),
+        tag: (Class, pattern) => new patterns.TagPattern(Class, pattern),
         preguarded: (predicate, pattern) => new patterns.PreguardedPattern(predicate, pattern),
         guarded: (pattern, predicate) => new patterns.GuardedPattern(pattern, predicate),
         array: (...args) => new patterns.ArrayPattern(...args),
@@ -43,7 +47,9 @@ module.exports = {
     }),
     $$: (thing, pattern) => typeof thing === 'string'
         ? new patterns.TypePattern(thing, pattern)
-        : new patterns.InstancePattern(thing, pattern),
+        : thing.prototype instanceof UnionBase
+            ? new patterns.TagPattern(thing, pattern)
+            : new patterns.InstancePattern(thing, pattern),
     _: new patterns.IgnorePattern(),
 
     // Shortcut functions
