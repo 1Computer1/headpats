@@ -2,15 +2,18 @@ const { extractor } = require('../util/symbols');
 const Pattern = require('./Pattern');
 
 class MultiplePattern extends Pattern {
-    constructor(...values) {
+    constructor(...patterns) {
         super();
 
-        this.values = values;
+        this.patterns = patterns.map(Pattern.patternOf);
     }
 
-    [extractor](value) {
-        if (this.values.some(x => Object.is(x, value))) {
-            return { matched: true, extracted: {} };
+    [extractor](value, previousExtracted) {
+        for (const pattern of this.patterns) {
+            const { matched, extracted } = pattern[extractor](value, previousExtracted);
+            if (matched) {
+                return { matched: true, extracted };
+            }
         }
 
         return { matched: false };

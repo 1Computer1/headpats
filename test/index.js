@@ -88,6 +88,17 @@ should('match one of some values', () => {
     assert.strictEqual(fn(4), 2);
 });
 
+should('match one of some patterns', () => {
+    const fn = pat
+        .case(is.oneOf($$('string', $.x), $$(String, $.x)), () => 1)
+        .case(is.oneOf($$('number', $.x), $$(Number, $.x)), () => 2);
+
+    assert.strictEqual(fn('a'), 1);
+    assert.strictEqual(fn(4), 2);
+    assert.strictEqual(fn(Object('a')), 1);
+    assert.strictEqual(fn(Object(4)), 2);
+});
+
 should('match based on a preguard', () => {
     const fn = pat.case(is.preguarded(Array.isArray, $.a), ({ a }) => a[0]);
     assert.strictEqual(fn([1]), 1);

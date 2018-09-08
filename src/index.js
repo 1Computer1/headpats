@@ -20,7 +20,7 @@ module.exports = {
         id: id => new patterns.IDPattern(id),
         ignore: () => new patterns.IgnorePattern(),
         equal: value => new patterns.EqualPattern(value),
-        oneOf: (...values) => new patterns.MultiplePattern(...values),
+        oneOf: (...args) => new patterns.MultiplePattern(...args),
         inRange: (lowerBound, upperBound, exclusive = true) => new patterns.RangePattern(lowerBound, upperBound, exclusive),
         type: (type, pattern) => new patterns.TypePattern(type, pattern),
         instance: (Class, pattern) => new patterns.InstancePattern(Class, pattern),

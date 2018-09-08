@@ -166,10 +166,10 @@ declare namespace Patterns {
         public [extractor](value: any, previousExtracted: any): PatternMatchResult;
     }
 
-    export class MultiplePattern<T> extends Pattern {
-        public constructor(...values: T[]);
+    export class MultiplePattern extends Pattern {
+        public constructor(...patterns: any[]);
 
-        public values: T[];
+        public patterns: PatternMatcher[];
 
         public [extractor](value: any, previousExtracted: any): PatternMatchResult;
     }
@@ -251,7 +251,7 @@ declare namespace Aliases {
     export function ignore(): Patterns.IgnorePattern;
     export function instance<T extends HasInstance>(Class: T, pattern: any): Patterns.InstancePattern<T>;
     export function map<K>(patterns: Map<K, any>, restPattern?: any): Patterns.MapPattern<K>;
-    export function oneOf<T>(...values: T[]): Patterns.MultiplePattern<T>;
+    export function oneOf(...patterns: any[]): Patterns.MultiplePattern;
     export function object(patterns: object, restPattern?: any): Patterns.ObjectPattern;
     export function preguarded(predicate: Predicate<any>, pattern: any): Patterns.PreguardedPattern;
     export function inRange<T>(lowerBound: T, upperBound: T, exclusive?: boolean): Patterns.RangePattern<T>;
